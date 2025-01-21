@@ -1,3 +1,6 @@
+// I stole this from https://alphaguess.com/ --- Jacob
+//
+//
 // word list was obtained from https://sourceforge.net/projects/scrabbledict/
 
 // Note: the trie isn't much smaller on bare size, but it's almost half as small when gzipped
