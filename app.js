@@ -1,5 +1,17 @@
 import { validWordTrie } from './dictionary.js';
 
+const button = document.getElementById('button');
+button.addEventListener('click', onButtonClick);
+
+const textInput = document.getElementById("word");
+
+function onButtonClick() {
+  app(textInput.value);
+  textInput.value = "";
+}
+
+
+
 function isCharacterInObject(character, object) {
   // console.log("Looking for a character in an object");
 
@@ -29,8 +41,7 @@ function accessNestedObject(object, keys) {
   return keys.reduce((current, key) => current[key], object);
 }
 
-function app() {
-  const word = "baconse";
+function app(word = "hello") {
   console.log(`Looking for word: ${word}`);
 
   const foundCharacters = [];
@@ -65,5 +76,9 @@ function app() {
   console.log(foundCharacters);
 }
 
+function lookUpWord() {
+  console.log("Hello");
+  //app();
+}
 
 app();
