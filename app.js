@@ -26,17 +26,15 @@ function isCurrentObjectAWord(object) {
   return false;
 }
 
+function accessNestedObject(object, keys) {
+  return keys.reduce((current, key) => current[key], object);
+}
+
 function app() {
-
-  const word = "tre";
-
+  const word = "bre";
   console.log(`Looking for word: ${word}`);
 
   const foundCharacters = [];
-
-  const accessNestedObject = (object, keys) => {
-    return keys.reduce((current, key) => current[key], object);
-  };
 
 
   for (let i = 0; i < word.length; i++) {
@@ -54,7 +52,7 @@ function app() {
       console.log(`Word length: ${word.length - 1}`);
       console.log(`Current i: ${i}`);
 
-      if ((i === word.length - 1) && currentObjectIsAWord) {
+      if (i === word.length - 1) {
         if (currentObjectIsAWord) {
           console.log("Success! You have entered a valid word.");
         } else {
