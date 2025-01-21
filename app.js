@@ -13,18 +13,22 @@ function isCharacterInObject(character, object) {
   return false;
 }
 
+function printNoWordFoundMessage() {
+  console.log("Sorry bro! Please enter a valid word.");
+}
+
 function isCurrentObjectAWord(object) {
   console.log("Checking if current object is a word");
   if (object.hasOwnProperty("")) {
     console.log("IT'S A WORD");
+    return true;
   }
+  return false;
 }
 
 function app() {
 
-  console.log("Hello");
-
-  const word = "afraideeeee";
+  const word = "tre";
 
   console.log(`Looking for word: ${word}`);
 
@@ -35,7 +39,8 @@ function app() {
   };
 
 
-  for (let character of word) {
+  for (let i = 0; i < word.length; i++) {
+    const character = word[i];
     console.log(character);
 
     let nestedObject = accessNestedObject(validWordTrie, foundCharacters);
@@ -44,7 +49,22 @@ function app() {
 
     if (characterIsInObject) {
       foundCharacters.push(character);
-      isCurrentObjectAWord(accessNestedObject(validWordTrie, foundCharacters));
+      const currentObject = accessNestedObject(validWordTrie, foundCharacters);
+      const currentObjectIsAWord = isCurrentObjectAWord(currentObject);
+      console.log(`Word length: ${word.length - 1}`);
+      console.log(`Current i: ${i}`);
+
+      if ((i === word.length - 1) && currentObjectIsAWord) {
+        if (currentObjectIsAWord) {
+          console.log("Success! You have entered a valid word.");
+        } else {
+          printNoWordFoundMessage();
+        }
+      }
+    } else {
+      console.log("Character is not in object, breaking word for-loop.");
+      printNoWordFoundMessage();
+      break;
     }
 
   }
