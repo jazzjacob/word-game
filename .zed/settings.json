@@ -8,5 +8,10 @@
     "calt": false,
     "liga": false
   },
-  "use_autoclose": false
+  "use_autoclose": false,
+  "languages": {
+    "HTML": {
+      "tab_size": 2
+    }
+  }
 }

@@ -4,13 +4,19 @@ const button = document.getElementById('button');
 button.addEventListener('click', onButtonClick);
 
 const textInput = document.getElementById("word");
+const messageBox =  document.createElement("div");
+const body = document.querySelector('body');
 
-function onButtonClick() {
-  app(textInput.value);
-  textInput.value = "";
+function formatText(text) {
+  return text.toLowerCase();
 }
 
 
+function onButtonClick(event) {
+  event.preventDefault();
+  app(textInput.value);
+  textInput.value = "";
+}
 
 function isCharacterInObject(character, object) {
   // console.log("Looking for a character in an object");
@@ -24,8 +30,25 @@ function isCharacterInObject(character, object) {
   return false;
 }
 
+function displayMessage(message) {
+  console.log(message);
+
+  const newContent = document.createTextNode(message);
+  messageBox.innerHTML = "";
+  messageBox.appendChild(newContent);
+  body.appendChild(messageBox);
+}
+
 function printNoWordFoundMessage(word) {
-  console.log(`Sorry bro! "${word}" is not a valid word.`);
+  const message = `Sorry bro! "${word}" is not a valid word.`;
+  console.log(message);
+  displayMessage(message);
+}
+
+function printSuccessMessage(word) {
+  const message = `Success! "${word}" is a valid word.`;
+  console.log(message);
+  displayMessage(message);
 }
 
 function isCurrentObjectAWord(object) {
@@ -41,7 +64,8 @@ function accessNestedObject(object, keys) {
   return keys.reduce((current, key) => current[key], object);
 }
 
-function app(word = "hello") {
+function app(word) {
+  word = formatText(word);
   console.log(`Looking for word: ${word}`);
 
   const foundCharacters = [];
@@ -62,7 +86,7 @@ function app(word = "hello") {
 
       if (i === word.length - 1) {
         if (currentObjectIsAWord) {
-          console.log("Success! You have entered a valid word.");
+          printSuccessMessage(word);
         } else {
           printNoWordFoundMessage(word);
         }
@@ -80,5 +104,3 @@ function lookUpWord() {
   console.log("Hello");
   //app();
 }
-
-app();
