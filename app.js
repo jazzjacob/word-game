@@ -19,6 +19,44 @@ body.insertBefore(wordOfTheDayElement, formElement);
 const guessedWordsBefore = [];
 const guessedWordsAfter = [];
 
+
+function addToArrayAlphabetically(word, array) {
+  for (let i = 0; i < array.length; i++) {
+    const comparisonResults = compareWordsAlphabetically(word, array[i]);
+    if (comparisonResults === "before") {
+      array.splice(i, 0, word);
+      return; // Exit early to avoid adding the word multiple times
+    }
+  }
+  // If no earlier position is found, push the word at the end
+  array.push(word);
+  console.log(guessedWordsBefore);
+  console.log(guessedWordsAfter);
+}
+
+function compareWordsAlphabetically(primaryWord, secondaryWord) {
+  for (let i = 0; i < primaryWord.length; i++) {
+    if (primaryWord[i] == secondaryWord[i]) {
+      console.log(`${primaryWord[i]} == ${secondaryWord[i]}`);
+    } else if (primaryWord[i] < secondaryWord[i]) {
+      // Word comes before word of the day alphabetically
+      console.log(`${primaryWord[i]} < ${secondaryWord[i]}`);
+      console.log(`"${primaryWord}" comes before "${secondaryWord}" alphabetically.`);
+      //addGuessedWord(primaryWord, "before");
+      return "before";
+    } else {
+      // Word comes before after of the day alphabetically
+      console.log(`${primaryWord[i]} > ${secondaryWord[i]}`);
+      console.log(`"${primaryWord}" comes after "${secondaryWord}" alphabetically.`);
+      return "after";
+    }
+  }
+  // The word contains the same letters as the word of the day, but is shorter
+  // E.g. word="hell", but word of the day is "hello"
+  console.log(`"${primaryWord}" comes before "${secondaryWord}" alphabetically.`);
+  return "before";
+}
+
 function compareWithTodaysWord(word) {
   console.log("Comparing with todays word!");
   console.log(`${word} vs ${wordOfTheDay}`);
@@ -28,44 +66,35 @@ function compareWithTodaysWord(word) {
     return;
   }
 
-  for (let i = 0; i < word.length; i++) {
-    if (word[i] == wordOfTheDay[i]) {
-      console.log(`${word[i]} == ${wordOfTheDay[i]}`);
-    } else if (word[i] < wordOfTheDay[i]) {
-      // Word comes before word of the day alphabetically
-      console.log(`${word[i]} < ${wordOfTheDay[i]}`);
-      console.log(`"${word}" comes before "${wordOfTheDay}" alphabetically.`);
-      addGuessedWord(word, "before");
-      return;
-    } else {
-      // Word comes before after of the day alphabetically
-      console.log(`${word[i]} > ${wordOfTheDay[i]}`);
-      console.log(`"${word}" comes after "${wordOfTheDay}" alphabetically.`);
-      addGuessedWord(word, "after");
-      return;
-    }
+  const comparisonResults = compareWordsAlphabetically(word, wordOfTheDay);
+  addGuessedWord(word, comparisonResults);
+}
+
+function updateUIList(wordArray, element, placement) {
+  element.innerHTML = "";
+  for (let i = 0; i < wordArray.length; i++) {
+    const wordListItem = document.createElement("li");
+    wordListItem.innerHTML = wordArray[i];
+    element.appendChild(wordListItem);
   }
-  // The word contains the same letters as the word of the day, but is shorter
-  // E.g. word="hell", but word of the day is "hello"
-  console.log(`"${word}" comes before "${wordOfTheDay}" alphabetically.`);
-  addGuessedWord(word, "before");
-  return;
+
+  if (placement == "before") {
+    body.insertBefore(element, formElement);
+  } else {
+    body.insertBefore(element, formElement.nextSibling);
+  }
 }
 
 function addGuessedWord(word, placement) {
-  const wordListItem = document.createElement("li");
 
   if (placement == "before") {
-    guessedWordsBefore.push(word);
-    wordListItem.innerHTML = word;
-    guessedWordsBeforeElement.appendChild(wordListItem);
-    body.insertBefore(guessedWordsBeforeElement, formElement);
+    //guessedWordsBefore.push(word);
+    addToArrayAlphabetically(word, guessedWordsBefore);
+    updateUIList(guessedWordsBefore, guessedWordsBeforeElement, "before");
 
   } else if (placement == "after") {
-    guessedWordsAfter.push(word);
-    wordListItem.innerHTML = word;
-    guessedWordsAfterElement.appendChild(wordListItem);
-    body.insertBefore(guessedWordsAfterElement, formElement.nextSibling);
+    addToArrayAlphabetically(word, guessedWordsAfter);
+    updateUIList(guessedWordsAfter, guessedWordsAfterElement, "after");
 
   } else {
     console.error("Erroneous useage of placement argument.");
