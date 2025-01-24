@@ -166,6 +166,13 @@ function app(word) {
 
   const foundCharacters = [];
 
+  const wordIsAlreadyGuessed = guessedWordsBefore.includes(word) || guessedWordsAfter.includes(word);
+
+  if (wordIsAlreadyGuessed) {
+    console.log(`${word} is already guessed!`);
+    return;
+  }
+
   for (let i = 0; i < word.length; i++) {
     const character = word[i];
     // console.log(character);
