@@ -1,23 +1,23 @@
 import { validWordTrie } from './dictionary.js';
 
 const button = document.getElementById('button');
-button.addEventListener('click', onButtonClick);
-
+const formElement = document.querySelector('form');
 const textInput = document.getElementById("word");
-const messageBox =  document.createElement("div");
 const body = document.querySelector('body');
+
+const messageBox =  document.createElement("div");
 const guessedWordsBeforeElement = document.createElement("ul");
 const guessedWordsAfterElement = document.createElement("ul");
+const wordOfTheDayElement = document.createElement("p");
+
+button.addEventListener('click', onButtonClick);
 
 const wordOfTheDay = "hell";
-const formElement = document.querySelector('form');
-const wordOfTheDayElement = document.createElement("p");
-wordOfTheDayElement.innerHTML = `Today's word: ${wordOfTheDay}`;
-
-body.insertBefore(wordOfTheDayElement, formElement);
-
 const guessedWordsBefore = [];
 const guessedWordsAfter = [];
+
+wordOfTheDayElement.innerHTML = `Today's word: ${wordOfTheDay}`;
+body.insertBefore(wordOfTheDayElement, formElement);
 
 
 function addToArrayAlphabetically(word, array) {
@@ -63,11 +63,14 @@ function compareWithTodaysWord(word) {
 
   if (word == wordOfTheDay) {
     console.log("WORD OF THE DAY FOUND!");
+    displayMessage(`WORD OF THE DAY FOUND! ${word}`);
     return;
   }
 
   const comparisonResults = compareWordsAlphabetically(word, wordOfTheDay);
   addGuessedWord(word, comparisonResults);
+
+  printSuccessMessage(word);
 }
 
 function updateUIList(wordArray, element, placement) {
@@ -86,7 +89,6 @@ function updateUIList(wordArray, element, placement) {
 }
 
 function addGuessedWord(word, placement) {
-
   if (placement == "before") {
     //guessedWordsBefore.push(word);
     addToArrayAlphabetically(word, guessedWordsBefore);
@@ -110,16 +112,13 @@ function formatText(text) {
 
 function onButtonClick(event) {
   event.preventDefault();
-  app(textInput.value);
+  lookUpWord(textInput.value);
   textInput.value = "";
 }
 
 function isCharacterInObject(character, object) {
-  // console.log("Looking for a character in an object");
-
   for (let key in object) {
     if (character == key) {
-      //console.log(`It's a match! Character: ${character}. Key: ${key}`);
       return true;
     }
   }
@@ -127,30 +126,24 @@ function isCharacterInObject(character, object) {
 }
 
 function displayMessage(message) {
-  console.log(message);
-
   const newContent = document.createTextNode(message);
   messageBox.innerHTML = "";
   messageBox.appendChild(newContent);
-  body.appendChild(messageBox);
+  body.insertBefore(messageBox, formElement.nextSibling);
 }
 
 function printNoWordFoundMessage(word) {
   const message = `Sorry bro! "${word}" is not a valid word.`;
-  console.log(message);
   displayMessage(message);
 }
 
 function printSuccessMessage(word) {
   const message = `Success! "${word}" is a valid word.`;
-  console.log(message);
   displayMessage(message);
 }
 
 function isCurrentObjectAWord(object) {
-  // console.log("Checking if current object is a word");
   if (object.hasOwnProperty("")) {
-    // console.log("IT'S A WORD");
     return true;
   }
   return false;
@@ -160,7 +153,8 @@ function accessNestedObject(object, keys) {
   return keys.reduce((current, key) => current[key], object);
 }
 
-function app(word) {
+
+function lookUpWord(word) {
   word = formatText(word);
   console.log(`Looking for word: ${word}`);
 
@@ -170,12 +164,12 @@ function app(word) {
 
   if (wordIsAlreadyGuessed) {
     console.log(`${word} is already guessed!`);
+    displayMessage(`"${word}" is already guessed!`);
     return;
   }
 
   for (let i = 0; i < word.length; i++) {
     const character = word[i];
-    // console.log(character);
 
     let currentObjectInWordTrie = accessNestedObject(validWordTrie, foundCharacters);
     let characterIsInObject = isCharacterInObject(character, currentObjectInWordTrie);
@@ -184,12 +178,9 @@ function app(word) {
       foundCharacters.push(character);
       const currentObject = accessNestedObject(validWordTrie, foundCharacters);
       const currentObjectIsAWord = isCurrentObjectAWord(currentObject);
-      //console.log(`Word length: ${word.length - 1}`);
-      //console.log(`Current i: ${i}`);
 
       if (i === word.length - 1) {
         if (currentObjectIsAWord) {
-          printSuccessMessage(word);
           compareWithTodaysWord(word);
         } else {
           printNoWordFoundMessage(word);
@@ -202,9 +193,4 @@ function app(word) {
     }
   }
   console.log(foundCharacters);
-}
-
-function lookUpWord() {
-  console.log("Hello");
-  //app();
 }
