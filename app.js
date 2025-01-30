@@ -1,4 +1,5 @@
 import { validWordTrie } from './dictionary.js';
+import { setState, getState } from './state.js';
 
 const button = document.getElementById('button');
 const formElement = document.querySelector('form');
@@ -32,6 +33,22 @@ function addToArrayAlphabetically(word, array) {
   array.push(word);
   console.log(guessedWordsBefore);
   console.log(guessedWordsAfter);
+}
+
+function addToStateAlphabetically(word, placement) {
+  const array = [...getState().wordsBefore];
+
+  for (let i = 0; i < array.length; i++) {
+    const comparisonResults = compareWordsAlphabetically(word, array[i]);
+    if (comparisonResults === "before") {
+      array.splice(i, 0, word);
+      setState({ wordsBefore: array });
+      return; // Exit early to avoid adding the word multiple times
+    }
+  }
+  // If no earlier position is found, push the word at the end
+  array.push(word);
+  setState({ wordsBefore: array });
 }
 
 function compareWordsAlphabetically(primaryWord, secondaryWord) {
@@ -92,7 +109,10 @@ function addGuessedWord(word, placement) {
   if (placement == "before") {
     //guessedWordsBefore.push(word);
     addToArrayAlphabetically(word, guessedWordsBefore);
+    addToStateAlphabetically(word, "before");
+
     updateUIList(guessedWordsBefore, guessedWordsBeforeElement, "before");
+
 
   } else if (placement == "after") {
     addToArrayAlphabetically(word, guessedWordsAfter);
