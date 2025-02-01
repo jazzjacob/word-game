@@ -6,21 +6,15 @@
     <script src="app.js" type="module"></script>
     <script defer src="customElement.js"></script>
     <script type="module" src="GuessedWordsList.js"></script>
-    <script type="module" src="stateTesting1.js"></script>
-    <script type="module" src="stateTesting2.js"></script>
-    <script type="module" src="stateTesting4.js"></script>
     <script type="module" src="main.js"></script>
+    <script type="module" src="WordInput.js"></script>
     </head>
   <body>
-    <my-custom-element checked="true">This is the custom element</my-custom-element>
-    <my-custom-element>This is the custom element</my-custom-element>
     <p>THE WORD GAME</p>
-    <form>
-      <input id="word" type="text"/>
-      <button id="button" type="submit"">Look up</button>
-    </form>
     <main-element>
-      <guessed-words-list></guessed-words-list>
+      <guessed-words-list placement="before"></guessed-words-list>
+      <word-input></word-input>
+      <guessed-words-list placement="after"></guessed-words-list>
     </main-element>
   </body>
 </html>

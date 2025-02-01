@@ -5,14 +5,17 @@ class GuessedWordsList extends HTMLElement {
     super();
 
     const template = document.createElement("template");
+
+    this.placement = this.getAttribute("placement");
+    console.log("Placement = ", this.placement);
+
     template.innerHTML = `
       <style>
         p {
           color: coral;
         }
       </style>
-      <p>This is the Guessed Words List</p>
-      <div id="dataFromState"></div>
+      <p>Words ${this.placement == "before" ? `before` : `after`}</p>
       <ul id="wordList"></ul>
     `;
 
@@ -20,18 +23,15 @@ class GuessedWordsList extends HTMLElement {
     shadow.append(template.content.cloneNode(true));
 
     // ✅ FIX: Now we get the element AFTER appending the template
-    this.dataElement = shadow.getElementById("dataFromState");
     this.wordList = shadow.getElementById("wordList");
   }
 
-  render() {
-    this.dataElement.textContent = getState().message || "No message yet!";
-
-    let wordArray = getState().wordsBefore;
+  renderWords() {
+    console.log("placement: ", this.placement);
+    let wordArray = this.placement == "before" ? getState().wordsBefore : getState().wordsAfter;
+    console.log("wordArray: ", wordArray);
 
     if (wordArray) {
-      console.log("Cleaning up innerHTML of wordlist here");
-      console.log(wordArray);
       this.wordList.innerHTML = '';
       wordArray.forEach((word) => {
         const listItem = document.createElement('li');
@@ -39,14 +39,11 @@ class GuessedWordsList extends HTMLElement {
         this.wordList.appendChild(listItem);
       });
     }
-    console.log(wordArray);
   }
 
   connectedCallback() {
-    this.render(); // Initial render
-
-    // ✅ FIX: Subscribe to state updates
-    subscribe(() => this.render());
+    this.renderWords();
+    subscribe(() => this.renderWords());
   }
 }
 

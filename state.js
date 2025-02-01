@@ -1,7 +1,7 @@
 // Step 1: Global state
 const state = {
   count: 0,
-  message: "Hello World",
+  message: "Welcome to the game",
   words: ["Hello", "World", "Yes", "Sir"],
   wordsBefore: [],
   wordsAfter: [],

@@ -36,13 +36,7 @@ class MainElement extends HTMLElement {
     const template = document.createElement("template");
     template.innerHTML = `
       <style>
-        p {
-          color: red;
-          font-size: 18px;
-        }
       </style>
-      <p>This is the main. Count: <span id="myCounter"></span></p>
-      <button id="incrementBtn">Increment</button>
       <slot></slot>
     `;
 
@@ -56,20 +50,8 @@ class MainElement extends HTMLElement {
     // Subscribe to state updates
     subscribe(() => this.render());
 
-    // Set up button click event inside the shadow DOM
-    this.incrementButton.addEventListener("click", () => {
-      setState({ count: state.count + 1 });
-    });
   }
 
-  // Render function now works inside shadow DOM
-  render() {
-    this.counterElement.textContent = state.count;
-  }
-
-  connectedCallback() {
-    this.render(); // Initial render
-  }
 }
 
 // Register the custom element
